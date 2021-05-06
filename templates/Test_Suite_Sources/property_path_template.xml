@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+	Copyright ©2002-2017 Daniel P. Bullington (dpbullington@gmail.com)
+	Distributed under the MIT license: http://www.opensource.org/licenses/mit-license.php
+-->
+<Template xmlns="http://www.textmetal.com/api/v6.0.0">
+<![CDATA[
+${.}
+${variable}
+${...............................................Address.......Phone.....Extension...}
+Full Name:			${LastName}, ${FirstName}
+Phone Extension:	${Address.Phone.Extension}
+Data:				${Records.Name}
+
+
+]]>
+
+	<ForEach in="${variable}" var-ct="_LoopCount" var-ix="_LoopIndex">
+		<ForEach.Body>
+
+<![CDATA[${EMP_ID}		${_LoopIndex}/${_LoopCount}
+]]>
+
+		</ForEach.Body>
+	</ForEach>
+<![CDATA[
+]]>
+	<!--<DebuggerBreakpoint />-->
+</Template>

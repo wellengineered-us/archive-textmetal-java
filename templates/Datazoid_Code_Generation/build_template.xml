@@ -1,0 +1,750 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+	Copyright ©2002-2017 Daniel P. Bullington (dpbullington@gmail.com)
+	Distributed under the MIT license: http://www.opensource.org/licenses/mit-license.php
+-->
+<Template xmlns="http://www.textmetal.com/api/v6.0.0">
+
+	<Alloc token="vs_sln_file_version" />
+	<Alloc token="vs_sln_info_version" />
+	<Alloc token="visual_studio_version" />
+	<Alloc token="minimum_visual_studio_version" />
+	<Alloc token="csproj_product_version" />
+	<Alloc token="csproj_target_framework_version" />
+	<Alloc token="csproj_tools_version" />
+
+	<Assign token="vs_sln_file_version">
+		<Assign.Expression>
+			<Value data="12.00" type="System.String" />
+		</Assign.Expression>
+	</Assign>
+	<Assign token="vs_sln_info_version">
+		<Assign.Expression>
+			<Value data="2013" type="System.String" />
+		</Assign.Expression>
+	</Assign>
+	<Assign token="visual_studio_version">
+		<Assign.Expression>
+			<Value data="12.0.31101.0" type="System.String" />
+		</Assign.Expression>
+	</Assign>
+	<Assign token="minimum_visual_studio_version">
+		<Assign.Expression>
+			<Value data="12.0.31101.0" type="System.String" />
+		</Assign.Expression>
+	</Assign>
+	<Assign token="csproj_product_version">
+		<Assign.Expression>
+			<Value data="8.0.30703" type="System.String" />
+		</Assign.Expression>
+	</Assign>
+	<Assign token="csproj_target_framework_version">
+		<Assign.Expression>
+			<Value data="v4.5.1" type="System.String" />
+		</Assign.Expression>
+	</Assign>
+	<Assign token="csproj_tools_version">
+		<Assign.Expression>
+			<Value data="12.0" type="System.String" />
+		</Assign.Expression>
+	</Assign>
+
+	<OutputScope name="..\build_src.ps1">
+		<![CDATA[#
+#	Copyright ©2002-2017 Daniel P. Bullington (dpbullington@gmail.com)
+#	Distributed under the MIT license: http://www.opensource.org/licenses/mit-license.php
+#
+
+cls
+$root = [System.Environment]::CurrentDirectory
+
+$build_flavor_dir = "Debug"
+$build_tool_cfg = "Debug"
+$src_dir = ".\src"
+$robocopy_exe = "robocopy.exe"
+$msbuild_exe = "C:\Program Files (x86)\MSBuild\12.0\bin\amd64\msbuild.exe"
+
+echo "The operation is starting..."
+
+&"$msbuild_exe" /verbosity:quiet /consoleloggerparameters:ErrorsOnly "$src_dir\${ModuleName}.sln" /t:clean /p:Configuration="$build_tool_cfg" > _msbuild_log.txt
+
+if (!($LastExitCode -eq $null -or $LastExitCode -eq 0))
+{ echo "An error occurred during the operation."; return; }
+
+&"$msbuild_exe" /verbosity:quiet /consoleloggerparameters:ErrorsOnly "$src_dir\${ModuleName}.sln" /t:build /p:Configuration="$build_tool_cfg" >> _msbuild_log.txt
+
+if (!($LastExitCode -eq $null -or $LastExitCode -eq 0))
+{ echo "An error occurred during the operation."; return; }
+
+echo "The operation completed successfully."
+]]>
+	</OutputScope>
+
+	<OutputScope name="..\build_src.bat" encoding="ASCII">
+		<![CDATA[@echo off
+
+REM
+REM	Copyright ©2002-2017 Daniel P. Bullington (dpbullington@gmail.com)
+REM	Distributed under the MIT license: http://www.opensource.org/licenses/mit-license.php
+REM
+
+powershell -command .\build_src
+]]>
+	</OutputScope>
+
+	<OutputScope name="SolutionAssemblyInfo.cs">
+		<Include name="include_gen_cprt_message.cs.txt" />
+<![CDATA[
+using System.Reflection;
+using System.Runtime.InteropServices;
+
+#if DEBUG
+
+[assembly: AssemblyConfiguration("Debug")]
+#else
+[assembly: AssemblyConfiguration("Release")]
+#endif
+
+[assembly: AssemblyCompany("comapny")]
+[assembly: AssemblyProduct("product")]
+[assembly: AssemblyCopyright("©years company, all rights reserved.")]
+[assembly: AssemblyDescription("description")]
+[assembly: AssemblyTrademark("trademark™")]
+[assembly: AssemblyCulture("")]
+[assembly: AssemblyVersion("0.0.0.*")]
+[assembly: AssemblyInformationalVersion("yyyy.mm.dd")]
+[assembly: AssemblyFileVersion("0.0.0.0")]
+[assembly: AssemblyDelaySign(false)]
+[assembly: ComVisible(false)]
+
+]]>
+	</OutputScope>
+
+	<OutputScope name="${ModuleName}\ProjectAssemblyInfo.cs">
+		<Include name="include_gen_cprt_message.cs.txt" />
+<![CDATA[
+using System.Reflection;
+
+[assembly: AssemblyTitle("title")]
+
+]]>
+	</OutputScope>
+
+	<OutputScope name="${ModuleName}.UnitTests\ProjectAssemblyInfo.cs">
+		<Include name="include_gen_cprt_message.cs.txt" />
+<![CDATA[
+using System.Reflection;
+
+[assembly: AssemblyTitle("title")]
+
+]]>
+	</OutputScope>
+
+	<OutputScope name="${ModuleName}.IntegrationTests\ProjectAssemblyInfo.cs">
+		<Include name="include_gen_cprt_message.cs.txt" />
+<![CDATA[
+using System.Reflection;
+
+[assembly: AssemblyTitle("title")]
+
+]]>
+	</OutputScope>
+
+	<OutputScope name="${ModuleName}.sln">
+		<![CDATA[
+Microsoft Visual Studio Solution File, Format Version ${vs_sln_file_version}
+# Visual Studio ${vs_sln_info_version}
+VisualStudioVersion = ${visual_studio_version}
+MinimumVisualStudioVersion = ${minimum_visual_studio_version}
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{11000000-0000-0000-0000-00000000FFFF}"
+	ProjectSection(SolutionItems) = preProject
+		SolutionAssemblyInfo.cs = SolutionAssemblyInfo.cs
+	EndProjectSection
+EndProject
+Project("{10000000-0000-0000-0000-00000000FFFF}") = "${ModuleName}", "${ModuleName}\${ModuleName}.csproj", "{FFFF0000-0000-0000-0000-000000000001}"
+EndProject
+Project("{10000000-0000-0000-0000-00000000FFFF}") = "${ModuleName}.UnitTests", "${ModuleName}.UnitTests\${ModuleName}.UnitTests.csproj", "{FFFF0000-0000-0000-0000-000000000002}"
+EndProject
+Project("{10000000-0000-0000-0000-00000000FFFF}") = "${ModuleName}.IntegrationTests", "${ModuleName}.IntegrationTests\${ModuleName}.IntegrationTests.csproj", "{FFFF0000-0000-0000-0000-000000000003}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FFFF0000-0000-0000-0000-000000000001}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FFFF0000-0000-0000-0000-000000000001}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FFFF0000-0000-0000-0000-000000000001}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FFFF0000-0000-0000-0000-000000000001}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FFFF0000-0000-0000-0000-000000000002}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FFFF0000-0000-0000-0000-000000000002}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FFFF0000-0000-0000-0000-000000000002}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FFFF0000-0000-0000-0000-000000000002}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FFFF0000-0000-0000-0000-000000000003}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FFFF0000-0000-0000-0000-000000000003}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FFFF0000-0000-0000-0000-000000000003}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FFFF0000-0000-0000-0000-000000000003}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
+]]>
+	</OutputScope>
+
+	<OutputScope name="${ModuleName}.IntegrationTests\App.config">
+		<![CDATA[<?xml version="1.0" encoding="utf-8"?>
+
+<configuration>
+	<connectionStrings>
+		<add name="${ModuleName}::ConnectionString" connectionString="${ConnectionString}" providerName="${ConnectionType}" />
+	</connectionStrings>
+	<appSettings>
+		<add key="${ModuleName}::DataSourceTag" value="${DataSourceTag}" />
+		<add key="${ModuleName}::UseDatabaseFile" value="false" />
+		<add key="${ModuleName}::KillDatabaseFile" value="false" />
+		<add key="${ModuleName}::DatabaseFileName" value="" />
+		<add key="${ModuleName}::DatabaseDirectoryPath" value="" />
+	</appSettings>
+</configuration>]]>
+	</OutputScope>
+
+	<OutputScope name="${ModuleName}.IntegrationTests\App.(${DataSourceTag}).config">
+		<![CDATA[<?xml version="1.0" encoding="utf-8"?>
+
+<configuration>
+	<connectionStrings>
+		<add name="${ModuleName}::ConnectionString" connectionString="${ConnectionString}" providerName="${ConnectionType}" />
+	</connectionStrings>
+	<appSettings>
+		<add key="${ModuleName}::DataSourceTag" value="${DataSourceTag}" />
+		<add key="${ModuleName}::UseDatabaseFile" value="false" />
+		<add key="${ModuleName}::KillDatabaseFile" value="false" />
+		<add key="${ModuleName}::DatabaseFileName" value="" />
+		<add key="${ModuleName}::DatabaseDirectoryPath" value="" />
+	</appSettings>
+</configuration>]]>
+	</OutputScope>
+
+	<OutputScope name="${ModuleName}.IntegrationTests\App.(net.sqlite).config">
+		<![CDATA[<?xml version="1.0" encoding="utf-8"?>
+
+<configuration>
+	<connectionStrings>
+		<add name="${ModuleName}::ConnectionString" connectionString="Data Source={0};FailIfMissing=True" providerName="System.Data.SQLite.SQLiteConnection, System.Data.SQLite" />
+	</connectionStrings>
+	<appSettings>
+		<add key="${ModuleName}::DataSourceTag" value="net.sqlite" />
+		<add key="${ModuleName}::UseDatabaseFile" value="true" />
+		<add key="${ModuleName}::KillDatabaseFile" value="true" />
+		<add key="${ModuleName}::DatabaseFileName" value="${ModuleName}.database" />
+		<add key="${ModuleName}::DatabaseDirectoryPath" value="{0}" />
+	</appSettings>
+</configuration>]]>
+	</OutputScope>
+
+	<OutputScope name="${ModuleName}\SQL\RevisionHistory.(${DataSourceTag}).xml">
+		<![CDATA[<?xml version="1.0" encoding="utf-8"?>
+
+<History xmlns="http://www.TextMetal.Middleware.com/api/v7.0.0">
+</History>]]>
+	</OutputScope>
+
+	<OutputScope name="${ModuleName}\SQL\RevisionHistory.(net.sqlite).xml">
+		<![CDATA[<?xml version="1.0" encoding="utf-8"?>
+
+<History xmlns="http://www.TextMetal.Middleware.com/api/v7.0.0">
+</History>]]>
+	</OutputScope>
+
+	<OutputScope name="${ModuleName}.UnitTests\UnitTests.nunit">
+		<![CDATA[<?xml version="1.0" encoding="utf-8" ?>
+<NUnitProject>
+	<Settings activeconfig="Debug"/>
+
+	<Config configfile="App.config" name="Debug">
+		<assembly path="bin\Debug\${ModuleName}.UnitTests.dll"/>
+	</Config>
+
+	<Config configfile="App.config" name="Release">
+		<assembly path="bin\Release\${ModuleName}.UnitTests.dll"/>
+	</Config>
+
+</NUnitProject>]]>
+	</OutputScope>
+
+	<OutputScope name="${ModuleName}.IntegrationTests\IntegrationTests.nunit">
+		<![CDATA[<?xml version="1.0" encoding="utf-8" ?>
+<NUnitProject>
+	<Settings activeconfig="Debug_(${DataSourceTag})"/>
+
+	<Config configfile="App.(${DataSourceTag}).config" name="Debug_(${DataSourceTag})">
+		<assembly path="bin\Debug\${ModuleName}.IntegrationTests.dll"/>
+	</Config>
+
+	<Config configfile="App.(net.sqlite).config" name="Debug_(net.sqlite)">
+		<assembly path="bin\Debug\${ModuleName}.IntegrationTests.dll"/>
+	</Config>
+
+	<Config configfile="App.(${DataSourceTag}).config" name="Release_(${DataSourceTag})">
+		<assembly path="bin\Release\${ModuleName}.IntegrationTests.dll"/>
+	</Config>
+
+	<Config configfile="App.(net.sqlite).config" name="Release_(net.sqlite)">
+		<assembly path="bin\Release\${ModuleName}.IntegrationTests.dll"/>
+	</Config>
+
+</NUnitProject>]]>
+	</OutputScope>
+
+	<OutputScope name="${ModuleName}\${ModuleName}.csproj">
+		<Alloc token="FolderName" />
+
+		<![CDATA[<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="${csproj_tools_version}">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>${csproj_product_version}</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{FFFF0000-0000-0000-0000-000000000001}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>${ClrNamespace}</RootNamespace>
+    <AssemblyName>${ModuleName}</AssemblyName>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\${ModuleName}.snk</AssemblyOriginatorKeyFile>
+    <TargetFrameworkVersion>${csproj_target_framework_version}</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\${ModuleName}.XML</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\${ModuleName}.XML</DocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core" />
+	<Reference Include="System.Data" />
+	<Reference Include="System.Xml" />
+
+	<Reference Include="System.Data.SQLite">
+      <HintPath>..\..\lib\SQLite\x64\System.Data.SQLite.dll</HintPath>
+    </Reference>
+
+	<Reference Include="Newtonsoft.Json">
+      <HintPath>..\..\lib\Newtonsoft.Json\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+
+	<Reference Include="TextMetal.Middleware.Data">
+      <HintPath>..\..\lib\TextMetal\TextMetal.Middleware.Data.dll</HintPath>
+    </Reference>
+	<Reference Include="TextMetal.Middleware.Solder">
+      <HintPath>..\..\lib\TextMetal\TextMetal.Middleware.Solder.dll</HintPath>
+    </Reference>
+
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\${ModuleName}.snk">
+      <Link>${ModuleName}.snk</Link>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+	<Compile Include="..\SolutionAssemblyInfo.cs">
+      <Link>SolutionAssemblyInfo.cs</Link>
+    </Compile>
+	<Compile Include="IThisAppRepository.g.cs" />
+	<Compile Include="ThisAppRepository.g.cs" />
+	<Compile Include="ProjectAssemblyInfo.cs" />
+
+]]>
+
+		<ForEach in="Schemas" var-ct="_LoopCount" var-ix="_LoopIndex">
+			<ForEach.Filter></ForEach.Filter>
+			<ForEach.Body>
+
+				<ForEach in="Tables" var-ct="_LoopCount" var-ix="_LoopIndex">
+					<ForEach.Filter></ForEach.Filter>
+					<ForEach.Body>
+
+						<If>
+							<If.Condition>
+								<UnaryExpression operator="Not">
+									<UnaryExpression.TheExpression>
+										<Facet name="IsView" />
+									</UnaryExpression.TheExpression>
+								</UnaryExpression>
+							</If.Condition>
+							<If.True>
+								<Assign token="FolderName">
+									<Assign.Expression>
+										<Value data="Tables" />
+									</Assign.Expression>
+								</Assign>
+							</If.True>
+						</If>
+
+						<If>
+							<If.Condition>
+								<Facet name="IsView" />
+							</If.Condition>
+							<If.True>
+								<Assign token="FolderName">
+									<Assign.Expression>
+										<Value data="Views" />
+									</Assign.Expression>
+								</Assign>
+							</If.True>
+						</If>
+
+						<![CDATA[	<Compile Include="${FolderName}\${TableNameSingularPascalCase}.g.cs" />
+	<Compile Include="${FolderName}\I${TableNameSingularPascalCase}.g.cs" />]]>
+					</ForEach.Body>
+				</ForEach>
+			</ForEach.Body>
+		</ForEach>
+
+		<Assign token="FolderName">
+			<Assign.Expression>
+				<Value data="Procedures" />
+			</Assign.Expression>
+		</Assign>
+
+		<ForEach in="Schemas" var-ct="_LoopCount" var-ix="_LoopIndex">
+			<ForEach.Filter></ForEach.Filter>
+			<ForEach.Body>
+
+				<ForEach in="Procedures" var-ct="_LoopCount" var-ix="_LoopIndex">
+					<ForEach.Filter></ForEach.Filter>
+					<ForEach.Body>
+						<![CDATA[    <Compile Include="${FolderName}\I${ProcedureNameSingularPascalCase}_Request.g.cs" />
+    <Compile Include="${FolderName}\I${ProcedureNameSingularPascalCase}_Result.g.cs" />
+	<Compile Include="${FolderName}\I${ProcedureNameSingularPascalCase}_Response.g.cs" />
+	<Compile Include="${FolderName}\${ProcedureNameSingularPascalCase}_Request.g.cs" />
+    <Compile Include="${FolderName}\${ProcedureNameSingularPascalCase}_Result.g.cs" />
+	<Compile Include="${FolderName}\${ProcedureNameSingularPascalCase}_Response.g.cs" />]]>
+					</ForEach.Body>
+				</ForEach>
+			</ForEach.Body>
+		</ForEach>
+
+		<![CDATA[
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="SQL\RevisionHistory.%28${DataSourceTag}%29.xml" />
+    <EmbeddedResource Include="SQL\RevisionHistory.%28net.sqlite%29.xml" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
+]]>
+	</OutputScope>
+
+	<OutputScope name="${ModuleName}.UnitTests\${ModuleName}.UnitTests.csproj">
+		<Alloc token="FolderName" />
+
+		<![CDATA[<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="${csproj_tools_version}">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>${csproj_product_version}</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{FFFF0000-0000-0000-0000-000000000002}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>${ClrNamespace}.UnitTests</RootNamespace>
+    <AssemblyName>${ModuleName}.UnitTests</AssemblyName>
+    <SignAssembly>false</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\${ModuleName}.snk</AssemblyOriginatorKeyFile>
+    <TargetFrameworkVersion>${csproj_target_framework_version}</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+
+	<Reference Include="nunit.framework">
+      <HintPath>..\..\lib\NUnit\nunit.framework.dll</HintPath>
+    </Reference>
+	<Reference Include="NMock3">
+      <HintPath>..\..\lib\NMock3\NMock3.dll</HintPath>
+    </Reference>
+
+	<Reference Include="Newtonsoft.Json">
+      <HintPath>..\..\lib\Newtonsoft.Json\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+
+	<Reference Include="TextMetal.Middleware.Data">
+      <HintPath>..\..\lib\TextMetal\TextMetal.Middleware.Data.dll</HintPath>
+    </Reference>
+	<Reference Include="TextMetal.Middleware.Solder">
+      <HintPath>..\..\lib\TextMetal\TextMetal.Middleware.Solder.dll</HintPath>
+    </Reference>
+
+	<ProjectReference Include="..\${ModuleName}\${ModuleName}.csproj">
+      <Project>{FFFF0000-0000-0000-0000-000000000001}</Project>
+      <Name>${ModuleName}</Name>
+    </ProjectReference>
+
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\${ModuleName}.snk">
+      <Link>${ModuleName}.snk</Link>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+	<Compile Include="..\SolutionAssemblyInfo.cs">
+      <Link>SolutionAssemblyInfo.cs</Link>
+    </Compile>
+	<Compile Include="ProjectAssemblyInfo.cs" />
+	<Compile Include="ThisAppRepositoryTests.sp.g.cs" />
+	<Compile Include="ThisAppRepositoryTests.tv.g.cs" />
+	<None Include="UnitTests.nunit" />
+]]>
+
+		<ForEach in="Schemas" var-ct="_LoopCount" var-ix="_LoopIndex">
+			<ForEach.Filter></ForEach.Filter>
+			<ForEach.Body>
+
+				<ForEach in="Tables" var-ct="_LoopCount" var-ix="_LoopIndex">
+					<ForEach.Filter></ForEach.Filter>
+					<ForEach.Body>
+
+						<If>
+							<If.Condition>
+								<UnaryExpression operator="Not">
+									<UnaryExpression.TheExpression>
+										<Facet name="IsView" />
+									</UnaryExpression.TheExpression>
+								</UnaryExpression>
+							</If.Condition>
+							<If.True>
+								<Assign token="FolderName">
+									<Assign.Expression>
+										<Value data="Tables" />
+									</Assign.Expression>
+								</Assign>
+							</If.True>
+						</If>
+
+						<If>
+							<If.Condition>
+								<Facet name="IsView" />
+							</If.Condition>
+							<If.True>
+								<Assign token="FolderName">
+									<Assign.Expression>
+										<Value data="Views" />
+									</Assign.Expression>
+								</Assign>
+							</If.True>
+						</If>
+
+						<![CDATA[    <Compile Include="${FolderName}\${TableNameSingularPascalCase}Tests.g.cs" />]]>
+					</ForEach.Body>
+				</ForEach>
+			</ForEach.Body>
+		</ForEach>
+
+		<Assign token="FolderName">
+			<Assign.Expression>
+				<Value data="Procedures" />
+			</Assign.Expression>
+		</Assign>
+
+		<ForEach in="Schemas" var-ct="_LoopCount" var-ix="_LoopIndex">
+			<ForEach.Filter></ForEach.Filter>
+			<ForEach.Body>
+
+				<ForEach in="Procedures" var-ct="_LoopCount" var-ix="_LoopIndex">
+					<ForEach.Filter></ForEach.Filter>
+					<ForEach.Body>
+						<![CDATA[    <Compile Include="${FolderName}\${ProcedureNameSingularPascalCase}_RequestTests.g.cs" />
+    <Compile Include="${FolderName}\${ProcedureNameSingularPascalCase}_ResultTests.g.cs" />
+	<Compile Include="${FolderName}\${ProcedureNameSingularPascalCase}_ResponseTests.g.cs" />]]>
+					</ForEach.Body>
+				</ForEach>
+			</ForEach.Body>
+		</ForEach>
+
+		<![CDATA[
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
+]]>
+	</OutputScope>
+
+	<OutputScope name="${ModuleName}.IntegrationTests\${ModuleName}.IntegrationTests.csproj">
+		<Alloc token="FolderName" />
+
+		<![CDATA[<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="${csproj_tools_version}">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>${csproj_product_version}</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{FFFF0000-0000-0000-0000-000000000002}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>${ClrNamespace}.IntegrationTests</RootNamespace>
+    <AssemblyName>${ModuleName}.IntegrationTests</AssemblyName>
+    <SignAssembly>false</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\${ModuleName}.snk</AssemblyOriginatorKeyFile>
+    <TargetFrameworkVersion>${csproj_target_framework_version}</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core" />
+	<Reference Include="System.Data" />
+	<Reference Include="System.Xml" />
+
+	<Reference Include="nunit.framework">
+      <HintPath>..\..\lib\NUnit\nunit.framework.dll</HintPath>
+    </Reference>
+	<Reference Include="NMock3">
+      <HintPath>..\..\lib\NMock3\NMock3.dll</HintPath>
+    </Reference>
+
+	<Reference Include="System.Data.SQLite">
+      <HintPath>..\..\lib\SQLite\x64\System.Data.SQLite.dll</HintPath>
+    </Reference>
+
+	<Reference Include="Newtonsoft.Json">
+      <HintPath>..\..\lib\Newtonsoft.Json\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+
+	<Reference Include="TextMetal.Middleware.Data">
+      <HintPath>..\..\lib\TextMetal\TextMetal.Middleware.Data.dll</HintPath>
+    </Reference>
+	<Reference Include="TextMetal.Middleware.Solder">
+      <HintPath>..\..\lib\TextMetal\TextMetal.Middleware.Solder.dll</HintPath>
+    </Reference>
+
+	<ProjectReference Include="..\${ModuleName}\${ModuleName}.csproj">
+      <Project>{FFFF0000-0000-0000-0000-000000000001}</Project>
+      <Name>${ModuleName}</Name>
+    </ProjectReference>
+
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\${ModuleName}.snk">
+      <Link>${ModuleName}.snk</Link>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+	<Compile Include="..\SolutionAssemblyInfo.cs">
+      <Link>SolutionAssemblyInfo.cs</Link>
+    </Compile>
+	<Compile Include="ProjectAssemblyInfo.cs" />
+	<Compile Include="ThisAppRepositoryTests.g.cs" />
+	<Compile Include="ThisAppRepositoryTests.sp.g.cs" />
+	<Compile Include="ThisAppRepositoryTests.tv.g.cs" />
+	<None Include="IntegrationTests.nunit" />
+	<None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
+	<None Include="App.(${DataSourceTag}).config">
+      <SubType>Designer</SubType>
+    </None>
+	<None Include="App.(net.sqlite).config">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
+]]>
+	</OutputScope>
+
+	<Free token="vs_sln_file_version" />
+	<Free token="vs_sln_info_version" />
+	<Free token="visual_studio_version" />
+	<Free token="minimum_visual_studio_version" />
+	<Free token="csproj_product_version" />
+	<Free token="csproj_target_framework_version" />
+	<Free token="csproj_tools_version" />
+
+</Template>

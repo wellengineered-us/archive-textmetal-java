@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/associative/associative.iml" filepath="$PROJECT_DIR$/associative/associative.iml" />
+      <module fileurl="file://$PROJECT_DIR$/core/core.iml" filepath="$PROJECT_DIR$/core/core.iml" />
+      <module fileurl="file://$PROJECT_DIR$/debugger/debugger.iml" filepath="$PROJECT_DIR$/debugger/debugger.iml" />
+      <module fileurl="file://$PROJECT_DIR$/expression/expression.iml" filepath="$PROJECT_DIR$/expression/expression.iml" />
+      <module fileurl="file://$PROJECT_DIR$/hostcli/hostcli.iml" filepath="$PROJECT_DIR$/hostcli/hostcli.iml" />
+      <module fileurl="file://$PROJECT_DIR$/hosting/hosting.iml" filepath="$PROJECT_DIR$/hosting/hosting.iml" />
+      <module fileurl="file://$PROJECT_DIR$/inputoutput/inputoutput.iml" filepath="$PROJECT_DIR$/inputoutput/inputoutput.iml" />
+      <module fileurl="file://$PROJECT_DIR$/naming/naming.iml" filepath="$PROJECT_DIR$/naming/naming.iml" />
+      <module fileurl="file://$PROJECT_DIR$/properties/properties.iml" filepath="$PROJECT_DIR$/properties/properties.iml" />
+      <module fileurl="file://$PROJECT_DIR$/sort/sort.iml" filepath="$PROJECT_DIR$/sort/sort.iml" />
+      <module fileurl="file://$PROJECT_DIR$/source/source.iml" filepath="$PROJECT_DIR$/source/source.iml" />
+      <module fileurl="file://$PROJECT_DIR$/template/template.iml" filepath="$PROJECT_DIR$/template/template.iml" />
+      <module fileurl="file://$PROJECT_DIR$/tokenization/tokenization.iml" filepath="$PROJECT_DIR$/tokenization/tokenization.iml" />
+      <module fileurl="file://$PROJECT_DIR$/xmldialect/xmldialect.iml" filepath="$PROJECT_DIR$/xmldialect/xmldialect.iml" />
+    </modules>
+  </component>
+</project>

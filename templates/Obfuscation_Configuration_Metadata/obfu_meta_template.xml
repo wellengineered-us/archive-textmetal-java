@@ -1,0 +1,136 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+	Copyright ©2002-2014 Daniel Bullington (dpbullington@gmail.com)
+	Distributed under the MIT license: http://www.opensource.org/licenses/mit-license.php
+-->
+<Template xmlns="http://www.textmetal.com/api/v6.0.0">
+
+	<ForEach in="serial" var-ct="_LoopCount" var-ix="_LoopIndex">
+		<ForEach.Body>
+
+	<ForEach in="databases" var-ct="_LoopCount" var-ix="_LoopIndex">
+		<ForEach.Body>
+
+			<OutputScope name="${OutputFilePrefix}${DatabaseName}.json" append="false">
+
+<![CDATA[
+{
+	"MetadataCount": ${MetadataCount},
+	"MetadataSerial": "${MetadataSerial}",
+
+	"SignHash":
+	{
+		"Multiplier": 33, 
+		"Size": 1000000,
+		"Seed": 5381
+	},
+
+	"ValueHash":
+	{
+		"Multiplier": 33, 
+		"Size": 999,
+		"Seed": 5381
+	},
+
+	"SharedSecret": "a47Ao829Qtml044m0AV246TX8cM2Vl3m8nmmDW8EU238b4eLq1h235qQwCkHG10Z",
+
+	"Dictionaries":
+	[
+]]>
+
+		<ForEach in="dictionaries" var-ct="_LoopCount" var-ix="_LoopIndex">
+			<ForEach.Sort>
+				<Ascending>
+					<Ascending.Compare>
+						<Facet name="DictionaryId" />
+					</Ascending.Compare>
+				</Ascending>
+			</ForEach.Sort>
+			<ForEach.Body>
+<![CDATA[
+		{
+			"DictionaryId": "${DictionaryId}",
+			"DictionaryType": "${DictionaryType}",
+
+			"DatabaseName": "${DatabaseName}",
+			"SchemaName": "${SchemaName}",
+			"ObjectType": "${ObjectType}",
+			"ObjectName": "${ObjectName}",
+
+			"KeyMemberType": "${KeyMemberType}",
+			"KeyMemberName": "${KeyMemberName}",
+			"ValueMemberType": "${ValueMemberType}",
+			"ValueMemberName": "${ValueMemberName}",
+
+			"RecordCount": ${RecordCount}
+		},
+]]>
+			</ForEach.Body>
+		</ForEach>
+
+<![CDATA[
+	],
+
+	"Objects":
+	[
+]]>
+			<ForEach in="objects" var-ct="_LoopCount" var-ix="_LoopIndex">
+				<ForEach.Sort>
+					<Ascending>
+						<Ascending.Compare>
+							<Facet name="ObjectName" />
+						</Ascending.Compare>
+					</Ascending>
+				</ForEach.Sort>
+				<ForEach.Body>
+<![CDATA[
+		{
+			"ObjectType": "Table",
+			"DatabaseName": "${DatabaseName}",
+			"SchemaName": "${SchemaName}",
+			"ObjectName": "${ObjectName}",
+
+			"Members":
+			[
+	]]>
+				<ForEach in="members" var-ct="_LoopCount" var-ix="_LoopIndex">
+					<ForEach.Sort>
+						<Ascending>
+							<Ascending.Compare>
+								<Facet name="MemberOrdinal" />
+							</Ascending.Compare>
+						</Ascending>
+					</ForEach.Sort>
+					<ForEach.Body>
+	<![CDATA[
+				{
+					"MemberType": "${MemberType}",
+					"MemberName": "${MemberName}",
+
+					"ObfuscationStrategy": "${ObfuscationStrategy}",
+					"DictionaryRef": "${DictionaryId}",
+
+					"MaskFactor": 0.50
+				},
+	]]>
+						</ForEach.Body>
+				</ForEach>
+	<![CDATA[
+			]
+		},
+	]]>
+						</ForEach.Body>
+				</ForEach>
+	<![CDATA[
+	]
+}
+]]>
+
+			</OutputScope>
+		</ForEach.Body>
+	</ForEach>
+
+		</ForEach.Body>
+	</ForEach>
+</Template>

@@ -1,0 +1,118 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+	Copyright ©2002-2017 Daniel P. Bullington (dpbullington@gmail.com)
+	Distributed under the MIT license: http://www.opensource.org/licenses/mit-license.php
+-->
+<Template xmlns="http://www.textmetal.com/api/v6.0.0">
+
+	<Alloc token="FolderName" />
+
+	<Assign token="FolderName">
+		<Assign.Expression>
+			<Value data="Procedures" />
+		</Assign.Expression>
+	</Assign>
+
+	<ForEach in="Schemas" var-ct="_LoopCount" var-ix="_LoopIndex">
+		<ForEach.Filter></ForEach.Filter>
+		<ForEach.Body>
+
+			<ForEach in="Procedures" var-ct="_LoopCount" var-ix="_LoopIndex">
+				<ForEach.Filter></ForEach.Filter>
+				<ForEach.Body>
+
+					<OutputScope name="${ModuleName}.UnitTests\${FolderName}\${ProcedureNameSingularPascalCase}_ResultTests.g.cs">
+						<Include name="include_gen_cprt_message.cs.txt" />
+<![CDATA[
+
+using System;
+using System.Xml;
+
+using NUnit.Framework;
+]]>
+						<If>
+							<If.Condition>
+								<UnaryExpression operator="IsDef">
+									<UnaryExpression.TheExpression>
+										<Aspect name="ClrUsingNamespaces" />
+									</UnaryExpression.TheExpression>
+								</UnaryExpression>
+							</If.Condition>
+							<If.True>
+								<ForEach in="ClrUsingNamespaces" var-ct="_LoopCount" var-ix="_LoopIndex" var-item="_LoopItem">
+									<ForEach.Body>
+										<![CDATA[using ${_LoopItem};
+]]>
+									</ForEach.Body>
+								</ForEach>
+							</If.True>
+						</If>
+						<![CDATA[
+using ${ClrNamespace}.${FolderName};
+
+namespace ${ClrNamespace}.UnitTests.${FolderName}
+{
+	[TestFixture]
+	public sealed class ${ProcedureNameSingularPascalCase}_ResultTests
+	{
+		#region Constructors/Destructors
+
+		public ${ProcedureNameSingularPascalCase}_ResultTests()
+		{
+		}
+
+		#endregion
+
+		#region Methods/Operators
+
+		[Test]
+		public void ShouldCreate${ProcedureNameSingularPascalCase}Test()
+		{
+			${ProcedureNameSingularPascalCase}_Result ${ProcedureNameSingularCamelCase}Result;
+
+			${ProcedureNameSingularCamelCase}Result = new ${ProcedureNameSingularPascalCase}_Result();
+
+]]>
+
+						<ForEach in="Columns" var-ct="_LoopCount" var-ix="_LoopIndex">
+							<ForEach.Filter></ForEach.Filter>
+							<ForEach.Body>
+
+								<![CDATA[			${ProcedureNameSingularCamelCase}Result.@${ColumnNamePascalCase} = default(${ColumnCSharpClrType});
+			Assert.AreEqual(default(${ColumnCSharpClrType}), ${ProcedureNameSingularCamelCase}Result.@${ColumnNamePascalCase});
+]]>
+
+								<If>
+									<If.Condition>
+										<BinaryExpression operator="Ne">
+											<BinaryExpression.LeftExpression>
+												<Facet name="_LoopCount" />
+											</BinaryExpression.LeftExpression>
+											<BinaryExpression.RightExpression>
+												<Facet name="_LoopIndex" />
+											</BinaryExpression.RightExpression>
+										</BinaryExpression>
+									</If.Condition>
+									<If.True>
+										<![CDATA[
+]]>
+									</If.True>
+								</If>
+							</ForEach.Body>
+						</ForEach>
+
+						<![CDATA[		}
+
+		#endregion
+	}
+}
+]]>
+					</OutputScope>
+				</ForEach.Body>
+			</ForEach>
+
+		</ForEach.Body>
+	</ForEach>
+
+</Template>

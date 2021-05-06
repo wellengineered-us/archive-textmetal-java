@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+	Copyright ©2002-2019 Daniel P. Bullington; ©2018-2019 SyncPrem, all rights reserved.
+	Distributed under the MIT license: https://opensource.org/licenses/MIT
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>us.wellengineered.textmetal</groupId>
+	<artifactId>us.wellengineered.textmetal.UNIVERSE</artifactId>
+	<version>${revision}</version>
+	<name>WellEngineered :: TextMetal</name>
+	<packaging>pom</packaging>
+
+	<properties>
+		<java.version>1.11</java.version>
+		<jdkLevel>1.11</jdkLevel>
+		<revision>0.1.0-SNAPSHOT</revision>
+	</properties>
+
+	<organization>
+		<name>WellEngineered</name>
+		<url>http://www.wellengineered.us/</url>
+	</organization>
+	<url>http://www.wellengineered.us/textmetal/</url>
+	<description>
+		A powerful meta-programming framework written in core Java.
+	</description>
+
+	<issueManagement>
+		<system>GitHub</system>
+		<url>https://github.com/wellengineered-us/textmetal/issues</url>
+	</issueManagement>
+
+	<inceptionYear>2020</inceptionYear>
+
+	<licenses>
+		<license>
+			<name>MIT License</name>
+			<url>https://opensource.org/licenses/MIT</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+
+	<scm>
+		<connection>scm:git:https://github.com/wellengineered-us/textmetal.git</connection>
+		<developerConnection>scm:git:git@github.com:wellengineered-us/textmetal.git</developerConnection>
+		<url>https://github.com/wellengineered-us/textmetal</url>
+	</scm>
+
+	<developers>
+		<developer>
+			<id>daniel.bullington@wellengineered-us</id>
+			<name>Daniel Bullington</name>
+			<email>daniel.bullington@wellengineered-us</email>
+			<organization>SyncPrem</organization>
+			<organizationUrl>http://www.wellengineered.us</organizationUrl>
+			<roles>
+				<role>owner</role>
+				<role>developer</role>
+			</roles>
+			<timezone>-5</timezone>
+		</developer>
+	</developers>
+
+	<modules>
+		<module>src/associative</module>
+		<module>src/core</module>
+		<module>src/debugger</module>
+		<module>src/expression</module>
+		<module>src/hostcli</module>
+		<module>src/hosting</module>
+		<module>src/inputoutput</module>
+		<module>src/naming</module>
+		<module>src/properties</module>
+		<module>src/sort</module>
+		<module>src/source</module>
+		<module>src/template</module>
+		<module>src/tokenization</module>
+		<module>src/xmldialect</module>
+	</modules>
+
+	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<configuration>
+						<source>${java.version}</source>
+						<target>${java.version}</target>
+						<compilerArgs>
+							<arg>-Xlint:all</arg>
+						</compilerArgs>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-resources-plugin</artifactId>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-jar-plugin</artifactId>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<version>2.22.1</version>
+					<dependencies>
+						<dependency>
+							<groupId>org.junit.platform</groupId>
+							<artifactId>junit-platform-surefire-provider</artifactId>
+							<version>1.3.1</version>
+						</dependency>
+					</dependencies>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+</project>

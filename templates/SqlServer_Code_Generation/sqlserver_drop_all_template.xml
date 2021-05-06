@@ -1,0 +1,164 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+	Copyright ©2002-2017 Daniel P. Bullington (dpbullington@gmail.com)
+	Distributed under the MIT license: http://www.opensource.org/licenses/mit-license.php
+-->
+<Template xmlns="http://www.textmetal.com/api/v6.0.0">
+
+	<OutputScope name="DropAll.g.sql">
+
+<![CDATA[
+-- Creating drop script for database: [${DefaultDatabaseName}]
+
+USE [${DefaultDatabaseName}]
+GO
+]]>
+
+	<ForEach in="Schemas" var-ct="_LoopCount" var-ix="_LoopIndex">
+		<ForEach.Filter>
+			<Ruby src="Script">
+				<Script>!["db_accessadmin", "db_backupoperator", "db_datareader",
+				"db_datawriter", "db_ddladmin", "db_denydatareader", "db_denydatawriter",
+				"db_owner", "db_securityadmin", "sys",
+				"INFORMATION_SCHEMA", "guest"].include?(textMetal.EvaluateToken("SchemaName".to_clr_string()));</Script>
+			</Ruby>
+		</ForEach.Filter>
+
+		<ForEach.Body>
+
+<![CDATA[-- Creating drop script for schema: [${SchemaName}]
+
+]]>
+
+			<ForEach in="Tables" var-ct="_LoopCount" var-ix="_LoopIndex">
+				<ForEach.Filter>
+					<BinaryExpression operator="Eq">
+						<BinaryExpression.LeftExpression>
+							<Facet name="IsView" />
+						</BinaryExpression.LeftExpression>
+						<BinaryExpression.RightExpression>
+							<Value type="System.Boolean" data="False" />
+						</BinaryExpression.RightExpression>
+					</BinaryExpression>
+				</ForEach.Filter>
+				<ForEach.Body>
+
+	<If>
+		<If.Condition>
+			<BinaryExpression operator="Ne">
+				<BinaryExpression.LeftExpression>
+					<Facet name="HasNoDefinedPrimaryKeyColumns" />
+				</BinaryExpression.LeftExpression>
+				<BinaryExpression.RightExpression>
+					<Value type="System.Boolean" data="True" />
+				</BinaryExpression.RightExpression>
+			</BinaryExpression>
+		</If.Condition>
+		<If.True>
+<![CDATA[ALTER TABLE [${SchemaName}].[${TableName}] DROP CONSTRAINT [${PrimaryKey.PrimaryKeyName}]
+GO
+
+]]>
+		</If.True>
+		</If>
+					<ForEach in="ForeignKeys" var-ct="_LoopCount" var-ix="_LoopIndex">
+						<ForEach.Filter />
+						<ForEach.Body>
+
+<![CDATA[ALTER TABLE [${SchemaName}].[${TableName}] DROP CONSTRAINT [${ForeignKeyName}]
+GO
+
+]]>
+
+						</ForEach.Body>
+					</ForEach>
+
+					<ForEach in="UniqueKeys" var-ct="_LoopCount" var-ix="_LoopIndex">
+						<ForEach.Filter>
+						</ForEach.Filter>
+						<ForEach.Body>
+
+<![CDATA[ALTER TABLE [${SchemaName}].[${TableName}] DROP CONSTRAINT [${UniqueKeyName}]
+GO
+
+]]>
+
+						</ForEach.Body>
+					</ForEach>
+
+					<ForEach in="Triggers" var-ct="_LoopCount" var-ix="_LoopIndex">
+						<ForEach.Filter>
+						</ForEach.Filter>
+						<ForEach.Body>
+
+<![CDATA[DROP TRIGGER [${SchemaName}].[${TriggerName}]
+GO
+
+]]>
+
+						</ForEach.Body>
+					</ForEach>
+
+
+
+
+<![CDATA[DROP TABLE [${SchemaName}].[${TableName}]
+GO
+
+]]>
+
+				</ForEach.Body>
+			</ForEach>
+
+			<ForEach in="Tables" var-ct="_LoopCount" var-ix="_LoopIndex">
+				<ForEach.Filter>
+					<BinaryExpression operator="Eq">
+						<BinaryExpression.LeftExpression>
+							<Facet name="IsView" />
+						</BinaryExpression.LeftExpression>
+						<BinaryExpression.RightExpression>
+							<Value type="System.Boolean" data="True" />
+						</BinaryExpression.RightExpression>
+					</BinaryExpression>
+				</ForEach.Filter>
+				<ForEach.Body>
+
+<![CDATA[DROP VIEW [${SchemaName}].[${TableName}]
+GO
+
+]]>
+
+				</ForEach.Body>
+			</ForEach>
+
+			<If>
+				<If.Condition>
+					<BinaryExpression operator="Ne">
+						<BinaryExpression.LeftExpression>
+							<Facet name="SchemaName" />
+						</BinaryExpression.LeftExpression>
+						<BinaryExpression.RightExpression>
+							<Value type="System.String" data="dbo" />
+						</BinaryExpression.RightExpression>
+					</BinaryExpression>
+				</If.Condition>
+				<If.True>
+<![CDATA[DROP SCHEMA [${SchemaName}]
+GO
+
+]]>
+				</If.True>
+				<If.False>
+<![CDATA[-- do not drop schema [${SchemaName}]
+GO
+
+]]>
+				</If.False>
+			</If>
+
+
+		</ForEach.Body>
+	</ForEach>
+	</OutputScope>
+</Template>

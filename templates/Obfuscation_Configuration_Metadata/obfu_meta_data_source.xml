@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+	Copyright ©2002-2014 Daniel Bullington (dpbullington@gmail.com)
+	Distributed under the MIT license: http://www.opensource.org/licenses/mit-license.php
+-->
+<SqlQuery xmlns="http://www.textmetal.com/api/v6.0.0" key="serial" order="" type="Text">
+	<Text>
+		SELECT t.MetadataCount, t.MetadataSerial FROM MetadataSerials t
+	</Text>
+	<SubQueries>
+		<SqlQuery xmlns="http://www.textmetal.com/api/v6.0.0" key="dictionaries" order="" type="Text">
+			<Text>
+				SELECT t.DictionaryId, t.DictionaryType, t.AssemblyName, t.TypeName, t.ServerName, t.DatabaseName, t.SchemaName, t.ObjectType, t.ObjectName, t.KeyMemberType, t.KeyMemberName, t.ValueMemberType, t.ValueMemberName, t.RecordCount FROM DictionaryMetadata t
+			</Text>
+			<SubQueries />
+		</SqlQuery>
+		<SqlQuery xmlns="http://www.textmetal.com/api/v6.0.0" key="databases" order="" type="Text">
+			<Text>
+				SELECT t.ServerName, t.DatabaseName FROM ObjectMetadata t GROUP BY t.ServerName, t.DatabaseName
+			</Text>
+			<SubQueries>
+				<SqlQuery xmlns="http://www.textmetal.com/api/v6.0.0" key="objects" order="" type="Text">
+					<Text>
+						SELECT t.ObjectId, t.SchemaName, t.ObjectType, t.ObjectName FROM ObjectMetadata t WHERE t.ServerName = '${ServerName}' AND t.DatabaseName = '${DatabaseName}'
+					</Text>
+					<SubQueries>
+						<SqlQuery xmlns="http://www.textmetal.com/api/v6.0.0" key="members" order="" type="Text">
+							<Text>
+								SELECT t.* FROM MemberMetadata t WHERE ObjectId = ${ObjectId}
+							</Text>
+							<SubQueries />
+						</SqlQuery>
+					</SubQueries>
+				</SqlQuery>
+			</SubQueries>
+		</SqlQuery>
+	</SubQueries>
+</SqlQuery>
+

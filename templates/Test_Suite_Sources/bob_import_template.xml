@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+	Copyright ©2002-2017 Daniel P. Bullington (dpbullington@gmail.com)
+	Distributed under the MIT license: http://www.opensource.org/licenses/mit-license.php
+-->
+<Template xmlns="http://www.textmetal.com/api/v6.0.0">
+
+	<!-- FAILS AS DEFECT: GitHub Issue #65 -->
+	<!--<Scrizzle newline="true">
+		<Scrizzle.Text>
+			<Value data="Scrizzle was here yo." />
+		</Scrizzle.Text>
+	</Scrizzle>-->
+
+	<Reference name="" />
+	<Reference name="TextMetal.Framework" />
+
+	<Import name="bob_import_template2.xml" />
+
+	<Write newline="true">
+		<Write.Text>
+			<Value data="Bob was here too." />
+		</Write.Text>
+	</Write>
+</Template>

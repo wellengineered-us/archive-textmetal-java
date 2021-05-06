@@ -1,0 +1,64 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+	Copyright ©2002-2014 Daniel Bullington (dpbullington@gmail.com)
+	Distributed under the MIT license: http://www.opensource.org/licenses/mit-license.php
+-->
+<Template xmlns="http://www.textmetal.com/api/v6.0.0">
+
+	<OutputScope name="SsisSrcToDstPkgGen.config.g.json" append="false">
+<![CDATA[
+{
+	"ValidateExternalMetadata": true,
+
+	"Objects":
+	[
+]]>
+		<ForEach in="TextFileLines" var-ct="_LoopCount" var-ix="_LoopIndex">
+			<ForEach.Body>
+<![CDATA[		{
+			"Source":
+			{
+				"ServerName": "${rb(`textMetal.EvaluateToken.invoke("SERVER_NAME").to_s().gsub("\\", "\\\\\\\\").to_clr_string() `)}",
+				"DatabaseName": "${DATABASE_NAME}",
+				"SchemaName": "${SCHEMA_NAME}",
+				"ObjectType": "${OBJECT_TYPE}",
+				"ObjectName": "${OBJECT_NAME}"
+			},
+
+			"ExcludeMemberNames": ["", "", "", ""],
+
+			"Destination":
+			{
+				"ServerName": "${rb(`textMetal.EvaluateToken.invoke("DestinationServerName").to_s().gsub("\\", "\\\\\\\\").to_clr_string() `)}",
+				"DatabaseName": "${DestinationDatabasePrefix}${DATABASE_NAME}",
+				"SchemaName": "${SCHEMA_NAME}",
+				"ObjectType": "${OBJECT_TYPE}",
+				"ObjectName": "${OBJECT_NAME}"
+			}
+		}]]>
+
+				<If>
+					<If.Condition>
+						<BinaryExpression operator="Ne">
+							<BinaryExpression.LeftExpression>
+								<Facet name="_LoopCount" />
+							</BinaryExpression.LeftExpression>
+							<BinaryExpression.RightExpression>
+								<Facet name="_LoopIndex" />
+							</BinaryExpression.RightExpression>
+						</BinaryExpression>
+					</If.Condition>
+					<If.True>
+<![CDATA[,
+]]>
+					</If.True>
+				</If>
+			</ForEach.Body>
+		</ForEach>
+<![CDATA[
+	]
+}
+]]>
+	</OutputScope>
+</Template>

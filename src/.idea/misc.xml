@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="MavenProjectsManager">
+    <option name="originalFiles">
+      <list>
+        <option value="$PROJECT_DIR$/associative/pom.xml" />
+        <option value="$PROJECT_DIR$/core/pom.xml" />
+        <option value="$PROJECT_DIR$/debugger/pom.xml" />
+        <option value="$PROJECT_DIR$/expression/pom.xml" />
+        <option value="$PROJECT_DIR$/hostcli/pom.xml" />
+        <option value="$PROJECT_DIR$/hosting/pom.xml" />
+        <option value="$PROJECT_DIR$/inputoutput/pom.xml" />
+        <option value="$PROJECT_DIR$/naming/pom.xml" />
+        <option value="$PROJECT_DIR$/properties/pom.xml" />
+        <option value="$PROJECT_DIR$/sort/pom.xml" />
+        <option value="$PROJECT_DIR$/source/pom.xml" />
+        <option value="$PROJECT_DIR$/template/pom.xml" />
+        <option value="$PROJECT_DIR$/tokenization/pom.xml" />
+        <option value="$PROJECT_DIR$/xmldialect/pom.xml" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectKey">
+    <option name="state" value="project://e2804f05-5315-4fc6-a121-c522a6c26470" />
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_14" default="false" project-jdk-name="15" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/out" />
+  </component>
+</project>

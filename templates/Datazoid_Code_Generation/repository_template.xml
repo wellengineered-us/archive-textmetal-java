@@ -1,0 +1,121 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+	Copyright ©2002-2017 Daniel P. Bullington (dpbullington@gmail.com)
+	Distributed under the MIT license: http://www.opensource.org/licenses/mit-license.php
+-->
+<Template xmlns="http://www.textmetal.com/api/v6.0.0">
+
+	<OutputScope name="${ModuleName}\ThisAppRepository.g.cs">
+		<Include name="include_gen_cprt_message.cs.txt" />
+<![CDATA[
+
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.IO;
+using System.Reflection;
+using System.Xml;
+
+using TextMetal.Middleware.Data.Models;
+using TextMetal.Middleware.Data.Impl.FreakazoidMapper;
+using TextMetal.Middleware.Data.Repositories;
+using TextMetal.Middleware.Solder.Injection;
+]]>
+		<If>
+			<If.Condition>
+				<UnaryExpression operator="IsDef">
+					<UnaryExpression.TheExpression>
+						<Aspect name="ClrUsingNamespaces" />
+					</UnaryExpression.TheExpression>
+				</UnaryExpression>
+			</If.Condition>
+			<If.True>
+				<ForEach in="ClrUsingNamespaces" var-ct="_LoopCount" var-ix="_LoopIndex" var-item="_LoopItem">
+					<ForEach.Body>
+						<![CDATA[using ${_LoopItem};
+]]>
+					</ForEach.Body>
+				</ForEach>
+			</If.True>
+		</If>
+
+		<If>
+			<If.Condition>
+				<BinaryExpression operator="Eq">
+					<BinaryExpression.LeftExpression>
+						<Value type="System.Boolean" data="True" />
+					</BinaryExpression.LeftExpression>
+					<BinaryExpression.RightExpression>
+						<Facet name="HasTables" />
+					</BinaryExpression.RightExpression>
+				</BinaryExpression>
+			</If.Condition>
+			<If.True>
+				<![CDATA[using ${ClrNamespace}.Tables;
+]]>
+			</If.True>
+		</If>
+		<If>
+			<If.Condition>
+				<BinaryExpression operator="Eq">
+					<BinaryExpression.LeftExpression>
+						<Value type="System.Boolean" data="True" />
+					</BinaryExpression.LeftExpression>
+					<BinaryExpression.RightExpression>
+						<Facet name="HasViews" />
+					</BinaryExpression.RightExpression>
+				</BinaryExpression>
+			</If.Condition>
+			<If.True>
+				<![CDATA[using ${ClrNamespace}.Views;
+]]>
+			</If.True>
+		</If>
+		<If>
+			<If.Condition>
+				<BinaryExpression operator="Eq">
+					<BinaryExpression.LeftExpression>
+						<Value type="System.Boolean" data="True" />
+					</BinaryExpression.LeftExpression>
+					<BinaryExpression.RightExpression>
+						<Facet name="HasProcedures" />
+					</BinaryExpression.RightExpression>
+				</BinaryExpression>
+			</If.Condition>
+			<If.True>
+				<![CDATA[using ${ClrNamespace}.Procedures;
+]]>
+			</If.True>
+		</If>
+<![CDATA[
+[assembly: DependencyRegistration]
+
+namespace ${ClrNamespace}
+{
+	[DependencyRegistration]
+	public partial class ThisAppRepository : FreakazoidModelRepository, IThisAppRepository
+	{
+		#region Constructors/Destructors
+
+		public ThisAppRepository()
+		{
+		}
+
+		#endregion
+
+		#region Methods/Operators
+
+		[DependencyRegistration]
+		public static void OnDepenndencyRegistration()
+		{
+			DependencyManager.AppDomainInstance.AddResolution<IThisAppRepository>("", new ConstructorDependencyResolution<ThisAppRepository>());
+		}
+
+		#endregion
+	}
+}
+]]>
+	</OutputScope>
+
+</Template>

@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+	Copyright ©2002-2017 Daniel P. Bullington (dpbullington@gmail.com)
+	Distributed under the MIT license: http://www.opensource.org/licenses/mit-license.php
+-->
+<Template xmlns="http://www.textmetal.com/api/v6.0.0">
+
+	<ForEach in="Records" var-ct="_LoopCount" var-ix="_LoopIndex">
+		<ForEach.Body>
+
+<![CDATA[${_LoopIndex}/${_LoopCount}
+]]>
+
+		</ForEach.Body>
+	</ForEach>
+
+</Template>

@@ -1,0 +1,169 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+	Copyright ©2002-2017 Daniel P. Bullington (dpbullington@gmail.com)
+	Distributed under the MIT license: http://www.opensource.org/licenses/mit-license.php
+-->
+<Template xmlns="http://www.textmetal.com/api/v6.0.0">
+
+	<!--<DebuggerBreakpoint />-->
+
+	<Write newline="true">
+		<Write.Text>
+			<Value data="${printf(`StartUtc`, `O`)}" type="System.String" />
+		</Write.Text>
+	</Write>
+
+	<Write newline="true">
+		<Write.Text>
+			<Value data="${StaticPropertyResolver(`System.DateTime`, `UtcNow`)}" type="System.String" />
+		</Write.Text>
+	</Write>
+
+	<Write newline="true">
+		<Write.Text>
+			<Value data="${StaticMethodResolver(`TextMetal.Framework.Tokenization.DynamicValueTokenReplacementStrategy`, `StaticMethodResolverPing`)}" type="System.String" />
+		</Write.Text>
+	</Write>
+
+	<Write newline="true">
+		<Write.Text>
+			<Value data="${StaticMethodResolver(`TextMetal.Framework.Tokenization.DynamicValueTokenReplacementStrategy`, `StaticMethodResolverPing`, `System.String`, `this is a test`)}" type="System.String" />
+		</Write.Text>
+	</Write>
+
+	<Write newline="true">
+		<Write.Text>
+			<Value data="${StaticMethodResolver(`TextMetal.Framework.Tokenization.DynamicValueTokenReplacementStrategy`, `StaticMethodResolverPing`, `System.Nullable\'1[[System.Int32]]`, `1`)}" type="System.String" />
+		</Write.Text>
+	</Write>
+
+	<Alloc token="test" />
+
+	<Assign token="test">
+		<Assign.Expression>
+			<Value data="1234.56789" type="System.Double" />
+		</Assign.Expression>
+	</Assign>
+
+	<Write newline="true">
+		<Write.Text>
+			<Value data="${test}" type="System.String" />
+		</Write.Text>
+	</Write>
+
+	<Assign token="test">
+		<Assign.Expression>
+			<UnaryExpression operator="Neg">
+				<UnaryExpression.TheExpression>
+					<Facet name="test" />
+				</UnaryExpression.TheExpression>
+			</UnaryExpression>
+		</Assign.Expression>
+	</Assign>
+
+	<Include name="bob_include_content.txt" />
+
+	<Alias local-name="Scrizzle" namespace-uri="http://www.textmetal.com/api/v6.0.0" aqt-name="TextMetal.Framework.Template.WriteConstruct, TextMetal.Framework" />
+
+	<!-- FAILS BY DESIGN: fails during deserialization, which is in same parse scope as Alias above... -->
+	<!--<Scrizzle newline="true">
+		<Scrizzle.Text>
+			<Value data="${test}" type="System.String" />
+		</Scrizzle.Text>
+	</Scrizzle>-->
+
+	<Import name="bob_import_template.xml" />
+
+	<![CDATA[
+
+	${ToolVersion}
+	${Environment.Variables.Path}
+	${Environment.CurrentManagedThreadId}
+
+	]]>
+
+	<If>
+		<If.Condition>
+			<BinaryExpression operator="And">
+				<BinaryExpression.LeftExpression>
+					<Value type="System.Boolean" data="false" />
+				</BinaryExpression.LeftExpression>
+				<BinaryExpression.RightExpression>
+					<Value type="System.Boolean" data="true" />
+				</BinaryExpression.RightExpression>
+			</BinaryExpression>
+		</If.Condition>
+		<If.True>
+<![CDATA[TRUE]]>
+		</If.True>
+		<If.False>
+<![CDATA[FALSE]]>
+		</If.False>
+	</If>
+
+	<If>
+		<If.Condition>
+			<BinaryExpression operator="And">
+				<BinaryExpression.LeftExpression>
+					<Value type="System.Boolean" data="false" />
+				</BinaryExpression.LeftExpression>
+				<BinaryExpression.RightExpression>
+					<Value type="System.Boolean" data="true" />
+				</BinaryExpression.RightExpression>
+			</BinaryExpression>
+		</If.Condition>
+		<If.Then>
+<![CDATA[THEN]]>
+		</If.Then>
+		<If.Else>
+<![CDATA[ELSE]]>
+		</If.Else>
+	</If>
+
+	<Unless>
+		<Unless.Condition>
+			<Value type="System.Boolean" data="false" />
+		</Unless.Condition>
+		<Unless.Then>
+<![CDATA[__unless:THEN]]>
+		</Unless.Then>
+		<Unless.Else>
+<![CDATA[__unless:ELSE]]>
+		</Unless.Else>
+	</Unless>
+
+	<Assign token="test">
+		<Assign.Expression>
+			<JavaScript src="File" expr="0;" file="sample.js">
+				<Script>
+					0;
+				</Script>
+			</JavaScript>
+		</Assign.Expression>
+	</Assign>
+
+	<![CDATA[
+${test}
+*js*
+
+${js(`textMetal.DebuggerBreakpoint()`)}
+]]>
+
+	<Assign token="test">
+		<Assign.Expression>
+			<UnaryExpression operator="Incr">
+				<UnaryExpression.TheExpression>
+					<Value data="100" type="System.Byte" />
+				</UnaryExpression.TheExpression>
+			</UnaryExpression>
+		</Assign.Expression>
+	</Assign>
+
+	<![CDATA[
+${test}
+***
+]]>
+
+	<Free token="test" />
+</Template>

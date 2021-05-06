@@ -1,0 +1,64 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+	Copyright ©2002-2017 Daniel P. Bullington (dpbullington@gmail.com)
+	Distributed under the MIT license: http://www.opensource.org/licenses/mit-license.php
+-->
+<Template xmlns="http://www.textmetal.com/api/v6.0.0">
+
+	<Alloc token="i" />
+	<OutputScope name="generics.g.cs">
+		<For var-ix="LoopIndex">
+			<For.Initializer>
+				<!--<DebuggerBreakpoint />-->
+			</For.Initializer>
+			<For.Condition>
+				<BinaryExpression operator="Lt">
+					<BinaryExpression.LeftExpression>
+						<Facet name="LoopIndex" />
+					</BinaryExpression.LeftExpression>
+					<BinaryExpression.RightExpression>
+						<Value type="System.Int32" data="16" />
+					</BinaryExpression.RightExpression>
+				</BinaryExpression>
+			</For.Condition>
+			<For.Iterator>
+				<Value type="System.Boolean" data="true" />
+			</For.Iterator>
+			<For.Body>
+
+<![CDATA[
+public static ActivatorDependencyResolution OfType<TObject${js(`
+var temp = "";
+for (var i =0; i <= this.LoopIndex; i++)
+	temp += ", TParameter" + i.toString();
+temp;
+`)}>()
+{
+	Type actualType;
+${js(`
+var temp = "";
+for (var i =0; i <= this.LoopIndex; i++)
+	temp += "\tType parameterType" + i.toString() + ";\r\n";
+temp;
+`)}
+	actualType = typeof(TObject);
+${js(`
+var temp = "";
+for (var i =0; i <= this.LoopIndex; i++)
+	temp += "\tparameterType" + i.toString() + " = typeof(TParameter" + i.toString() + ");\r\n";
+temp;
+`)}
+	return new ActivatorDependencyResolution(actualType, new Type[] { ${js(`
+var temp = "";
+for (var i =0; i <= this.LoopIndex; i++)
+	temp += (i != 0 ? ", " : "") + "parameterType" + i.toString();
+temp;
+`)} });
+}
+]]>
+			</For.Body>
+		</For>
+	</OutputScope>
+	<Free token="i" />
+</Template>

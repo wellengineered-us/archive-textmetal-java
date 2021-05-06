@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="associative" />
+        <module name="core" />
+        <module name="debugger" />
+        <module name="expression" />
+        <module name="hostcli" />
+        <module name="hosting" />
+        <module name="inputoutput" />
+        <module name="naming" />
+        <module name="properties" />
+        <module name="sort" />
+        <module name="source" />
+        <module name="template" />
+        <module name="tokenization" />
+        <module name="xmldialect" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+        <module name="associative" target="1.11" />
+        <module name="core" target="1.11" />
+        <module name="debugger" target="1.11" />
+        <module name="expression" target="1.11" />
+        <module name="hostcli" target="1.11" />
+        <module name="hosting" target="1.11" />
+        <module name="inputoutput" target="1.11" />
+        <module name="naming" target="1.11" />
+        <module name="properties" target="1.11" />
+        <module name="sort" target="1.11" />
+        <module name="source" target="1.11" />
+        <module name="template" target="1.11" />
+        <module name="tokenization" target="1.11" />
+        <module name="xmldialect" target="1.11" />
+    </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+        <module name="associative" options="-Xlint:all" />
+        <module name="core" options="-Xlint:all" />
+        <module name="debugger" options="-Xlint:all" />
+        <module name="expression" options="-Xlint:all" />
+        <module name="hostcli" options="-Xlint:all" />
+        <module name="hosting" options="-Xlint:all" />
+        <module name="inputoutput" options="-Xlint:all" />
+        <module name="naming" options="-Xlint:all" />
+        <module name="properties" options="-Xlint:all" />
+        <module name="sort" options="-Xlint:all" />
+        <module name="source" options="-Xlint:all" />
+        <module name="template" options="-Xlint:all" />
+        <module name="tokenization" options="-Xlint:all" />
+        <module name="xmldialect" options="-Xlint:all" />
+    </option>
+  </component>
+</project>

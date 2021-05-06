@@ -1,0 +1,221 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+	Copyright ©2002-2014 Daniel Bullington (dpbullington@gmail.com)
+	Distributed under the MIT license: http://www.opensource.org/licenses/mit-license.php
+-->
+<Template xmlns="http://www.textmetal.com/api/v6.0.0">
+
+	<OutputScope name="Obfuscation_Tables.g.sql">
+<![CDATA[
+
+SET NOCOUNT ON
+GO
+
+
+USE [master]
+GO
+
+
+IF EXISTS (SELECT sys_d.[database_id] FROM [sys].[databases] sys_d WHERE sys_d.[name] = '${ObfuscationDestinationDatabaseName}')
+BEGIN
+
+	ALTER DATABASE [${ObfuscationDestinationDatabaseName}] SET SINGLE_USER WITH ROLLBACK IMMEDIATE
+	
+	DROP DATABASE [${ObfuscationDestinationDatabaseName}]
+	
+END
+GO
+
+
+CREATE DATABASE [${ObfuscationDestinationDatabaseName}]
+GO
+
+
+USE [${ObfuscationDestinationDatabaseName}]
+GO
+]]>
+
+	<ForEach in="Schemas" var-ct="_LoopCount" var-ix="_LoopIndex">
+		<ForEach.Filter>
+			<Ruby src="Script">
+				<Script>!["db_accessadmin", "db_backupoperator", "db_datareader",
+				"db_datawriter", "db_ddladmin", "db_denydatareader", "db_denydatawriter",
+				"db_owner", "db_securityadmin", "sys",
+				"INFORMATION_SCHEMA", "guest"].include?(textMetal.EvaluateToken.invoke("SchemaName"));</Script>
+			</Ruby>	
+		</ForEach.Filter>
+		
+		<ForEach.Body>
+			<If>
+				<If.Condition>
+					<BinaryExpression operator="Ne">
+						<BinaryExpression.LeftExpression>
+							<Facet name="SchemaName" />
+						</BinaryExpression.LeftExpression>
+						<BinaryExpression.RightExpression>
+							<Value type="System.String" data="dbo" />
+						</BinaryExpression.RightExpression>
+					</BinaryExpression>
+				</If.Condition>
+				<If.True>
+<![CDATA[
+
+CREATE SCHEMA [${SchemaName}]
+GO
+]]>
+				</If.True>
+				<If.False>
+<![CDATA[
+
+-- DO NOT CREATE SCHEMA [${SchemaName}]
+]]>
+				</If.False>
+			</If>
+			
+			<ForEach in="Tables" var-ct="_LoopCount" var-ix="_LoopIndex">
+				<ForEach.Filter>
+				</ForEach.Filter>
+				<ForEach.Body>
+<![CDATA[
+
+CREATE TABLE [${SchemaName}].[${TableName}]
+(
+]]>
+				<ForEach in="Columns" var-ct="_LoopCount" var-ix="_LoopIndex">
+					<ForEach.Sort>
+						<Ascending>
+							<Ascending.Compare>
+								<Facet name="ColumnOrdinal" />
+							</Ascending.Compare>
+						</Ascending>
+					</ForEach.Sort>
+					<ForEach.Body>
+						<![CDATA[	[${ColumnName}] [${rb(`
+	if ["rowversion", "timestamp"].include?(textMetal.EvaluateToken.invoke("ColumnSqlType"))
+		type = "varbinary"
+	else
+		type = textMetal.EvaluateToken.invoke("ColumnSqlType")
+	end
+	
+	type
+	`)}]${rb(`
+	x = ""
+	if ["rowversion", "timestamp"].include?(textMetal.EvaluateToken.invoke("ColumnSqlType"))
+		x += "(8)"
+	elsif ["nvarchar", "varbinary", "varchar"].include?(textMetal.EvaluateToken.invoke("ColumnSqlType"))
+		x += "(" + (textMetal.EvaluateToken.invoke("ColumnSize") > 0 ? textMetal.EvaluateToken.invoke("ColumnSize").to_s() : "MAX") + ")"
+	elsif ["binary", "char", "nchar"].include?(textMetal.EvaluateToken.invoke("ColumnSqlType"))
+		x += "(" + (textMetal.EvaluateToken.invoke("ColumnSize") > 0 ? textMetal.EvaluateToken.invoke("ColumnSize").to_s() : "MAX") + ")"
+	elsif ["float"].include?(textMetal.EvaluateToken.invoke("ColumnSqlType"))
+		x += "(" + textMetal.EvaluateToken.invoke("ColumnPrecision").to_s() + ")"
+	elsif ["decimal", "numeric"].include?(textMetal.EvaluateToken.invoke("ColumnSqlType"))
+		x += "(" + textMetal.EvaluateToken.invoke("ColumnPrecision").to_s() + ", " + textMetal.EvaluateToken.invoke("ColumnScale").to_s() + ")"
+	else
+		x += ""
+	end
+
+	if textMetal.EvaluateToken.invoke("ColumnIsIdentity")
+		x += "" #" IDENTITY(1,1)"
+	else
+		x += ""
+	end
+
+	x
+`)} ${rb(`textMetal.EvaluateToken.invoke("ColumnNullable") ? "" : "NOT "`)}NULL,]]>
+							
+						<If>
+							<If.Condition>
+								<BinaryExpression operator="Ne">
+									<BinaryExpression.LeftExpression>
+										<Facet name="_LoopCount" />
+									</BinaryExpression.LeftExpression>
+									<BinaryExpression.RightExpression>
+										<Facet name="_LoopIndex" />
+									</BinaryExpression.RightExpression>
+								</BinaryExpression>
+							</If.Condition>
+							<If.True>
+<![CDATA[
+]]>
+							</If.True>
+						</If>
+					</ForEach.Body>
+				</ForEach>
+				
+				
+	<If>
+		<If.Condition>
+			<BinaryExpression operator="Ne">
+				<BinaryExpression.LeftExpression>
+					<Facet name="HasNoDefinedPrimaryKeyColumns" />
+				</BinaryExpression.LeftExpression>
+				<BinaryExpression.RightExpression>
+					<Value type="System.Boolean" data="True" />
+				</BinaryExpression.RightExpression>
+			</BinaryExpression>
+		</If.Condition>
+		<If.True>
+<![CDATA[
+
+	CONSTRAINT [${PrimaryKey.PrimaryKeyName}] PRIMARY KEY
+	(
+]]>
+				<ForEach in="Columns" var-ct="_LoopCount" var-ix="_LoopIndex">
+					<ForEach.Sort>
+						<Ascending>
+							<Ascending.Compare>
+								<Facet name="ColumnOrdinal" />
+							</Ascending.Compare>
+						</Ascending>
+					</ForEach.Sort>
+					<ForEach.Filter>
+						<BinaryExpression operator="Eq">
+							<BinaryExpression.LeftExpression>
+								<Facet name="ColumnIsPrimaryKey" />
+							</BinaryExpression.LeftExpression>
+							<BinaryExpression.RightExpression>
+								<Value type="System.Boolean" data="True" />
+							</BinaryExpression.RightExpression>
+						</BinaryExpression>
+					</ForEach.Filter>
+					<ForEach.Body>
+						<![CDATA[		[${ColumnName}]]]>
+							
+						<If>
+							<If.Condition>
+								<BinaryExpression operator="Ne">
+									<BinaryExpression.LeftExpression>
+										<Facet name="_LoopCount" />
+									</BinaryExpression.LeftExpression>
+									<BinaryExpression.RightExpression>
+										<Facet name="_LoopIndex" />
+									</BinaryExpression.RightExpression>
+								</BinaryExpression>
+							</If.Condition>
+							<If.True>
+<![CDATA[,
+]]>
+							</If.True>
+						</If>
+					</ForEach.Body>
+				</ForEach>
+<![CDATA[
+	)
+]]>
+		</If.True>
+	</If>
+<![CDATA[
+)
+GO
+]]>
+
+				</ForEach.Body>
+
+			</ForEach>
+
+		</ForEach.Body>
+	</ForEach>
+	</OutputScope>
+
+</Template>

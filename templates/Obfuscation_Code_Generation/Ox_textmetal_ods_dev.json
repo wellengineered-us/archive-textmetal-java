@@ -1,0 +1,80 @@
+﻿
+{
+	"MetadataCount": 0,
+	"MetadataSerial": "7/3/2014 5:14:25 AM",
+
+	"SignHash":
+	{
+		"Multiplier": 33, 
+		"Size": 1000000,
+		"Seed": 5381
+	},
+
+	"ValueHash":
+	{
+		"Multiplier": 33, 
+		"Size": 999,
+		"Seed": 5381
+	},
+
+	"SharedSecret": "a47Ao829Qtml044m0AV246TX8cM2Vl3m8nmmDW8EU238b4eLq1h235qQwCkHG10Z",
+
+	"Dictionaries":
+	[
+
+		{
+			"DictionaryId": "",
+			"DictionaryType": "",
+
+			"DatabaseName": "",
+			"SchemaName": "",
+			"ObjectType": "",
+			"ObjectName": "",
+
+			"KeyMemberType": "",
+			"KeyMemberName": "",
+			"ValueMemberType": "",
+			"ValueMemberName": "",
+
+			"RecordCount": 0
+		},
+
+	],
+
+	"Objects":
+	[
+
+		{
+			"ObjectType": "Table",
+			"DatabaseName": "textmetal_ods_dev",
+			"SchemaName": "application",
+			"ObjectName": "Organization",
+
+			"Members":
+			[
+	
+				{
+					"MemberType": "Column",
+					"MemberName": "OrganizationId",
+
+					"ObfuscationStrategy": "None",
+					"DictionaryRef": "Null",
+
+					"MaskFactor": 0.50
+				},
+	
+				{
+					"MemberType": "Column",
+					"MemberName": "OrganizationName",
+
+					"ObfuscationStrategy": "Shuffling",
+					"DictionaryRef": "Null",
+
+					"MaskFactor": 0.50
+				},
+	
+			]
+		},
+	
+	]
+}

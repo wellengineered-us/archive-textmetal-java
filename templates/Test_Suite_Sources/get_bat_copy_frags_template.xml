@@ -1,0 +1,62 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+	Copyright ©2002-2017 Daniel P. Bullington (dpbullington@gmail.com)
+	Distributed under the MIT license: http://www.opensource.org/licenses/mit-license.php
+-->
+<Template xmlns="http://www.textmetal.com/api/v6.0.0">
+	<OutputScope name="get_bat_copy_frags_template_pkg.g.txt">
+		<ForEach in="Records" var-ct="_LoopCount" var-ix="_LoopIndex" var-item="_LoopItem">
+			<ForEach.Body>
+<![CDATA[
+
+copy ".\src\${Field1}\bin\%BUILD_FLAVOR_DIR%\${Field1}.dll" "%PACKAGE_DIR%\."
+IF %ERRORLEVEL% NEQ 0 goto pkgError
+
+copy ".\src\${Field1}\bin\%BUILD_FLAVOR_DIR%\${Field1}.xml" "%PACKAGE_DIR%\."
+IF %ERRORLEVEL% NEQ 0 goto pkgError
+
+copy ".\src\${Field1}\bin\%BUILD_FLAVOR_DIR%\${Field1}.pdb" "%PACKAGE_DIR%\."
+IF %ERRORLEVEL% NEQ 0 goto pkgError
+
+]]>
+			</ForEach.Body>
+		</ForEach>
+	</OutputScope>
+
+	<OutputScope name="get_bat_copy_frags_template_tmpl.g.txt">
+		<ForEach in="Records" var-ct="_LoopCount" var-ix="_LoopIndex" var-item="_LoopItem">
+			<ForEach.Body>
+<![CDATA[
+
+copy "..\..\src\${Field1}\bin\%BUILD_FLAVOR_DIR%\${Field1}.dll" "%PACKAGE_DIR%\lib\TextMetal\."
+IF %ERRORLEVEL% NEQ 0 goto pkgError
+
+copy "..\..\src\${Field1}\bin\%BUILD_FLAVOR_DIR%\${Field1}.xml" "%PACKAGE_DIR%\lib\TextMetal\."
+IF %ERRORLEVEL% NEQ 0 goto pkgError
+
+copy "..\..\src\${Field1}\bin\%BUILD_FLAVOR_DIR%\${Field1}.pdb" "%PACKAGE_DIR%\lib\TextMetal\."
+IF %ERRORLEVEL% NEQ 0 goto pkgError
+
+]]>
+			</ForEach.Body>
+		</ForEach>
+	</OutputScope>
+
+	<OutputScope name="get_bat_copy_frags_template_aspmvc.g.txt">
+		<ForEach in="Records" var-ct="_LoopCount" var-ix="_LoopIndex" var-item="_LoopItem">
+			<ForEach.Body>
+<![CDATA[<div class="secass-data-label">
+	<%= this.Html.LabelFor(m => m.${Field1}, "${Field1}") %>
+</div>
+<div class="secass-data-field">
+	<%= this.Html.TextBoxFor(m => m.${Field1}, new { @class = "secass-input-text" }) %>
+	<%= this.Html.ValidationMessageFor(m => m.${Field1}) %>
+</div>
+
+]]>
+			</ForEach.Body>
+		</ForEach>
+	</OutputScope>
+
+</Template>

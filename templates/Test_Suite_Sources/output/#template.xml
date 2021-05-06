@@ -1,0 +1,65 @@
+﻿<Template debug="False" xmlns="http://www.textmetal.com/api/v6.0.0">
+	<Write dofvisnow="False" format="" newline="True">
+		<Write.Text id="">
+			<Value type="System.String" data="${printf(`StartUtc`, `O`)}" />
+		</Write.Text>
+	</Write>
+	<Write dofvisnow="False" format="" newline="True">
+		<Write.Text id="">
+			<Value type="System.String" data="${StaticPropertyResolver(`System.DateTime`, `UtcNow`)}" />
+		</Write.Text>
+	</Write>
+	<Write dofvisnow="False" format="" newline="True">
+		<Write.Text id="">
+			<Value type="System.String" data="${StaticMethodResolver(`TextMetal.Framework.Tokenization.DynamicValueTokenReplacementStrategy`, `StaticMethodResolverPing`)}" />
+		</Write.Text>
+	</Write>
+	<Write dofvisnow="False" format="" newline="True">
+		<Write.Text id="">
+			<Value type="System.String" data="${StaticMethodResolver(`TextMetal.Framework.Tokenization.DynamicValueTokenReplacementStrategy`, `StaticMethodResolverPing`, `System.String`, `this is a test`)}" />
+		</Write.Text>
+	</Write>
+	<Write dofvisnow="False" format="" newline="True">
+		<Write.Text id="">
+			<Value type="System.String" data="${StaticMethodResolver(`TextMetal.Framework.Tokenization.DynamicValueTokenReplacementStrategy`, `StaticMethodResolverPing`, `System.Nullable\'1[[System.Int32]]`, `1`)}" />
+		</Write.Text>
+	</Write>
+	<Alloc token="test" />
+	<Assign token="test">
+		<Assign.Expression id="">
+			<Value type="System.Double" data="1234.56789" />
+		</Assign.Expression>
+	</Assign>
+	<Write dofvisnow="False" format="" newline="True">
+		<Write.Text id="">
+			<Value type="System.String" data="${test}" />
+		</Write.Text>
+	</Write>
+	<Assign token="test">
+		<Assign.Expression id="">
+			<UnaryExpression operator="Neg">
+				<UnaryExpression.TheExpression id="">
+					<Facet name="test" />
+				</UnaryExpression.TheExpression>
+			</UnaryExpression>
+		</Assign.Expression>
+	</Assign>
+	<Include name="bob_include_content.txt" />
+	<Alias aqt-name="TextMetal.Framework.Template.WriteConstruct, TextMetal.Framework" local-name="Scrizzle" namespace-uri="http://www.textmetal.com/api/v6.0.0" />
+	<Import name="bob_import_template.xml" /><![CDATA[
+
+	${ToolVersion}
+	${Environment.Variables.Path}
+	${Environment.CurrentManagedThreadId}
+
+	]]><If><If.Condition id=""><BinaryExpression operator="And"><BinaryExpression.LeftExpression id=""><Value type="System.Boolean" data="False" /></BinaryExpression.LeftExpression><BinaryExpression.RightExpression id=""><Value type="System.Boolean" data="True" /></BinaryExpression.RightExpression></BinaryExpression></If.Condition><If.Else id=""><![CDATA[FALSE]]></If.Else><If.False id=""><![CDATA[FALSE]]></If.False><If.Then id=""><![CDATA[TRUE]]></If.Then><If.True id=""><![CDATA[TRUE]]></If.True></If><If><If.Condition id=""><BinaryExpression operator="And"><BinaryExpression.LeftExpression id=""><Value type="System.Boolean" data="False" /></BinaryExpression.LeftExpression><BinaryExpression.RightExpression id=""><Value type="System.Boolean" data="True" /></BinaryExpression.RightExpression></BinaryExpression></If.Condition><If.Else id=""><![CDATA[ELSE]]></If.Else><If.False id=""><![CDATA[ELSE]]></If.False><If.Then id=""><![CDATA[THEN]]></If.Then><If.True id=""><![CDATA[THEN]]></If.True></If><Unless><Unless.Condition id=""><Value type="System.Boolean" data="False" /></Unless.Condition><Unless.Else id=""><![CDATA[__unless:ELSE]]></Unless.Else><Unless.False id=""><![CDATA[__unless:ELSE]]></Unless.False><Unless.Then id=""><![CDATA[__unless:THEN]]></Unless.Then><Unless.True id=""><![CDATA[__unless:THEN]]></Unless.True></Unless><Assign token="test"><Assign.Expression id=""><JavaScript expr="0;" file="sample.js" src="File"><Script>
+					0;
+				</Script></JavaScript></Assign.Expression></Assign><![CDATA[
+${test}
+*js*
+
+${js(`textMetal.DebuggerBreakpoint()`)}
+]]><Assign token="test"><Assign.Expression id=""><UnaryExpression operator="Incr"><UnaryExpression.TheExpression id=""><Value type="System.Byte" data="100" /></UnaryExpression.TheExpression></UnaryExpression></Assign.Expression></Assign><![CDATA[
+${test}
+***
+]]><Free token="test" /></Template>
